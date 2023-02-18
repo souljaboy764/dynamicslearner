@@ -13,7 +13,7 @@ from model import Model
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--src", default="data/proc/preprocessed.npz", help="Path to source data", type=str)
-parser.add_argument("--log", default="logs/"+datetime.now().strftime("%Y%m%d%H%M%S"), help="Path to log dir", type=str)
+parser.add_argument("--dest", default="models/model_"+datetime.now().strftime("%Y%m%d%H%M%S")+".pth", help="Path to save model after training", type=str)
 parser.add_argument("--hidden", default=100, help="Size of the hidden layer", type=int)
 parser.add_argument("--seed", default=102548, help="Random Seed", type=int)
 parser.add_argument("--batch-size", default=256, help="Batch Size for Training", type=int)
@@ -84,22 +84,24 @@ jet = cm = plt.get_cmap('jet')
 cNorm  = colors.Normalize(vmin=0, vmax=4)
 scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=jet)
 
-fig = plt.figure()
-ax_pos = fig.add_subplot(121)
-ax_pred = fig.add_subplot(122)
+# fig = plt.figure()
+# ax_pos = fig.add_subplot(121)
+# ax_pred = fig.add_subplot(122)
 # ax_acc = fig.add_subplot(223)
 # ax_tau = fig.add_subplot(224)
 
 
 for i in range(4):
-	ax_pos.plot(observed_q[:, i], color=scalarMap.to_rgba(i), linestyle='--')
-	ax_pos.plot(desired_q[:, i], color=scalarMap.to_rgba(i), linestyle='-')
+	# ax_pos.plot(observed_q[:, i], color=scalarMap.to_rgba(i), linestyle='--')
+	# ax_pos.plot(desired_q[:, i], color=scalarMap.to_rgba(i), linestyle='-')
 
-	ax_pred.plot(plot_targets[:, i], color=scalarMap.to_rgba(i), linestyle='-')
-	ax_pred.plot(preds[:, i], color=scalarMap.to_rgba(i), linestyle='-', marker='.')
+	plt.plot(plot_targets[:, i], color=scalarMap.to_rgba(i), linestyle='-')
+	plt.plot(preds[:, i], color=scalarMap.to_rgba(i), linestyle='-', marker='.')
+	plt.fill_between(np.arange(len(plot_targets)), plot_targets[:,i], preds[:, i], color=scalarMap.to_rgba(i), alpha = 0.7)
 	
 	# ax_vel.plot(desired_q_dot[:, i], color=scalarMap.to_rgba(i), linestyle='-')
 
 	# ax_acc.plot(desired_q_ddot[:, i], color=scalarMap.to_rgba(i), linestyle='-')
 	# ax_tau.plot(desired_tau[:, i], color=scalarMap.to_rgba(i), linestyle='-')
 plt.show()
+torch.save(model, args.dest)

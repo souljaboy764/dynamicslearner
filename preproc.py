@@ -48,7 +48,10 @@ desired_q_dot = np.vstack(desired_q_dot)
 desired_q_ddot = np.vstack(desired_q_ddot)
 desired_tau = np.vstack(desired_tau)
 
-np.savez_compressed(args.dest, inputs=np.hstack([observed_q, desired_q, desired_q_dot, desired_q_ddot, desired_tau]), targets=desired_q - observed_q)
+np.savez_compressed(args.dest, 
+	inputs=np.hstack([desired_q_dot, desired_q_ddot, desired_tau]), 
+	targets=desired_q - observed_q
+)
 
 
 if args.visualize:
